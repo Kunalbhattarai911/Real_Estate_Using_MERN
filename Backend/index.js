@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import testRouter from './routes/test.route.js'
 import authRouter from './routes/auth.route.js'
+import userRoute from './routes/user.route.js'
+import cookieParser from "cookie-parser";
+
 dotenv.config();
 
 mongoose
@@ -18,6 +21,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
 const PORT = process.env.PORT || 8000;
@@ -27,3 +31,4 @@ app.listen(PORT, () => {
 
 app.use("/api/test", testRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRoute)

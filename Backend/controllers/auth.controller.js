@@ -38,6 +38,7 @@ export const signup = async (req, res) => {
     console.log("Error Details", error);
     return res.status(500).json({
       message: "An Error Occured While Registration",
+      error: error.message,
       success: false,
     });
   }
@@ -92,11 +93,11 @@ export const login = async (req, res) => {
     console.log("Error Details:", error);
     return res.status(500).json({
       message: "An Error Occured While Logging the User",
+      error: error.message,
       success: false,
     });
   }
 };
-
 
 export const google = async (req, res) => {
   try {
@@ -175,6 +176,7 @@ export const google = async (req, res) => {
     console.log("Error Details:", error);
     return res.status(500).json({
       message: "An Error Occured While login or signup using Google.",
+      error: error.message,
       success: false,
     });
   }
