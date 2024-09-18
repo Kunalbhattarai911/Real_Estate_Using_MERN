@@ -6,7 +6,8 @@ export const updateUserInfo = async (req, res) => {
         const {
             username,
             email,
-            password 
+            password,
+            avatar
         } = req.body;
 
         const userId = req.id; // Middleware authentication
@@ -32,6 +33,7 @@ export const updateUserInfo = async (req, res) => {
        
         if (username) user.username = username;
         if (email) user.email = email;
+        if(avatar) user.avatar = avatar;
 
         
         if (password) {
@@ -46,6 +48,7 @@ export const updateUserInfo = async (req, res) => {
             _id: user._id,
             username: user.username,
             email: user.email,
+            avatar: user.avatar
         }
 
         return res.status(201).json({

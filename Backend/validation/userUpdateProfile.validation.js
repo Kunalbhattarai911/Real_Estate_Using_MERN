@@ -5,6 +5,7 @@ export const updateUserProfile = (req, res, next) => {
     username: joi.string().min(1).max(100),
     email: joi.string().email(),
     password: joi.string().min(8),
+    avatar:joi.string()
   });
 
   const { error } = schema.validate(req.body);
