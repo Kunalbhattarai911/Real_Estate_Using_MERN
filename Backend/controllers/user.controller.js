@@ -66,3 +66,32 @@ export const updateUserInfo = async (req, res) => {
         });
     }
 }
+
+export const deleteUser = async(req,res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findById (id);
+
+        if(!user) {
+            return res.status(404).json({
+                message : "User Not Found.",
+                success : false
+            })
+        }
+
+        await user.deleteOne();
+
+        return res.status(200).clearCookie('token').json({
+            message : "user deleted successfull.",
+            success : true
+        })
+    } catch (error) {
+        console.log("Error Details:",error);
+        return res.status(500).json({
+            message : "An Error Occured while deleting the user",
+            error : error.message,
+            success : false
+        })
+    }
+}
