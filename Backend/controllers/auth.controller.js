@@ -74,7 +74,7 @@ export const login = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
-      avatar: user.avatar
+      avatar: user.avatar,
     };
 
     return res
@@ -177,6 +177,22 @@ export const google = async (req, res) => {
     console.log("Error Details:", error);
     return res.status(500).json({
       message: "An Error Occured While login or signup using Google.",
+      error: error.message,
+      success: false,
+    });
+  }
+};
+
+export const signout = async (req, res) => {
+  try {
+    return res.status(200).clearCookie("token").json({
+      message: "Logged out successfully.",
+      success: true,
+    });
+  } catch (error) {
+    console.log("Error Details:", error);
+    return res.status(500).json({
+      message: "An Error Occured while signing out the user",
       error: error.message,
       success: false,
     });
