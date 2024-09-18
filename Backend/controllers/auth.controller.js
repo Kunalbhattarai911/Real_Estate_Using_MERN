@@ -185,6 +185,21 @@ export const google = async (req, res) => {
 
 export const signout = async (req, res) => {
   try {
+
+    /*
+    A bit more secure way for signout 
+ {
+    return res.status(200).clearCookie("token", {
+      httpOnly: true,     
+      sameSite: "strict", 
+      secure: process.env.NODE_ENV === "production" 
+    }).json({
+      message: "Logged out successfully.",
+      success: true,
+    });
+  }
+    */
+
     return res.status(200).clearCookie("token").json({
       message: "Logged out successfully.",
       success: true,

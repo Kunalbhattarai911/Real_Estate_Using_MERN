@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import testRouter from './routes/test.route.js'
 import authRouter from './routes/auth.route.js'
 import userRoute from './routes/user.route.js'
+import listingRoute from './routes/listing.route.js'
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -31,4 +32,5 @@ app.listen(PORT, () => {
 
 app.use("/api/test", testRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRoute)
+app.use("/api/user", userRoute);
+app.use("/api/listing", listingRoute);
