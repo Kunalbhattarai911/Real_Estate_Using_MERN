@@ -73,3 +73,33 @@ export const getUserListing = async (req, res) => {
     });
   }
 };
+
+
+export const deleteListing = async (req,res) => {
+    try {
+        const userId = req.id;
+        const { id }= req.params;
+
+        const listing = await Listing.findOneAndDelete({_id : id, userId})
+
+        if(!listing) {
+            return res.status(404).json({
+                message : "Listing not found",
+                success : false
+            })
+        }
+
+        return res.status(200).json({
+            message : "Listing deleted Successfully.",
+            success : true
+        });
+
+    }  catch (error) {
+        console.log("Error Details:", error);
+        return res.status(500).json({
+          message: "An Error Occured while deleting the listing of this user",
+          Error: error.message,
+          success: false,
+        });
+      }
+    };
