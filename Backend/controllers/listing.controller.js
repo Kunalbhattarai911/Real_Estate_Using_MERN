@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Listing from "../models/listing.model.js";
 
 export const createListing = async (req, res) => {
@@ -161,4 +162,41 @@ export const updateListing = async (req, res) => {
       success : false
     })
   }
+};
+
+
+export const getSingleListing = async(req,res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.id;
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+          message: "Invalid task ID format",
+          success: false
+      });
+  }
+
+    const listing = await Listing.findOne({_id : id, userId})
+
+    if(!listing) {
+      return res.status(404).json({
+        message : "No Listing Found",
+        success : false,
+      })
+    }
+
+    return res.status(200).json({
+      message : "the listing is :",
+      success :true,
+      listing
+    })
+  } catch (error) {
+    console.log("Error Details", error);
+    return res.status(500).json({
+        message: "An error occurred while retrieving the listing",
+        success: false,
+        error: error.message 
+    });
+}
 };
