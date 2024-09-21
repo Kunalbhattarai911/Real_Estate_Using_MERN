@@ -95,3 +95,33 @@ export const deleteUser = async(req,res) => {
         })
     }
 }
+
+export const getUser = async(req,res) => {
+ try {
+    const { id }= req.params;
+
+    const userData = await User.findById({_id : id})
+
+    if(!userData){
+        return res.status(404).json({
+            message : "user not found",
+            success : false
+        })
+    }
+
+const {password : pass, ...rest} = userData._doc;
+
+    return res.status(200).json({
+        message : "user data",
+        success : true,
+        ...rest
+    })
+ }catch (error) {
+    console.log("Error Details:",error);
+    return res.status(500).json({
+        message : "An Error Occured while retriving the user",
+        error : error.message,
+        success : false
+    })
+}
+}

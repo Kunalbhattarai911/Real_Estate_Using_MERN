@@ -168,7 +168,6 @@ export const updateListing = async (req, res) => {
 export const getSingleListing = async(req,res) => {
   try {
     const { id } = req.params;
-    const userId = req.id;
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -177,7 +176,7 @@ export const getSingleListing = async(req,res) => {
       });
   }
 
-    const listing = await Listing.findOne({_id : id, userId})
+    const listing = await Listing.findOne({_id : id})
 
     if(!listing) {
       return res.status(404).json({
@@ -199,4 +198,76 @@ export const getSingleListing = async(req,res) => {
         error: error.message 
     });
 }
+};
+
+export const searchListings = async (req, res) => {
+  try {
+    const {
+      name,
+      type,
+      bedrooms,
+      bathrooms,
+      furnished,
+      parking,
+      offer,
+      minPrice,
+      maxPrice,
+      address,
+      page = 1, // Default to page 1
+      limit = 10, // Default to 10 items per page
+    } = req.query;
+
+    const query = {};
+
+    if (name) {
+      query.name = { $regex: name, $options: 'i' }; // Case-insensitive search
+    }
+    if (type) {
+      query.type = type;
+    }
+    if (bedrooms) {
+      query.bedrooms = bedrooms;
+    }
+    if (bathrooms) {
+      query.bathrooms = bathrooms;
+    }
+    if (furnished !== undefined) {
+      query.furnished = furnished === 'true';
+    }
+    if (parking !== undefined) {
+      query.parking = parking === 'true';
+    }
+    if (offer !== undefined) {
+      query.offer = offer === 'true';
+    }
+    if (minPrice) {
+      query.regularPrice = { ...query.regularPrice, $gte: Number(minPrice) };
+    }
+    if (maxPrice) {
+      query.regularPrice = { ...query.regularPrice, $lte: Number(maxPrice) };
+    }
+    if (address) {
+      query.address = { $regex: address, $options: 'i' };
+    }
+
+    // Convert page and limit to numbers
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    // Calculate the number of items to skip
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Fetch listings with pagination
+    const listings = await Listing.find(query).skip(skip).limit(limitNumber);
+    const totalListings = await Listing.countDocuments(query); // Total count for pagination
+
+    res.status(200).json({
+      totalListings,
+      totalPages: Math.ceil(totalListings / limitNumber),
+      currentPage: pageNumber,
+      listings,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
